@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0f0c">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Córdoba Futsal · Sala de Mando: plantilla, planificación, entrenos, partidos y valoraciones del Benjamín A.">
+<title>Córdoba Futsal · Sala de Mando</title>
+
+<!-- Favicons e iconos (logo sin fondo) -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<noscript>Esta aplicación necesita JavaScript activado.</noscript>
+<div id="toastHost"></div>
+<input type="file" id="fileImportInput" accept="application/json">
+
+<div id="loadOverlay" class="loader" role="status" aria-live="polite">
+  <div class="loader-spinner"></div>
+  <div class="loader-text">Cargando los datos del equipo…</div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="app is-loading" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="crest">
+      <div class="crest-badge"><img src="assets/img/logo.png" alt="Escudo del Córdoba Futsal" width="214" height="235"></div>
+      <div class="crest-text">
+        <div class="club">Córdoba Futsal</div>
+        <div class="season">Benjamín A · 26/27</div>
+      </div>
+    </div>
+
+    <div class="nav-search">
+      <input type="text" id="navSearch" placeholder="Buscar módulo…">
+    </div>
+
+    <div class="nav-scroll" id="navScroll">
+      <div class="nav-group">
+        <div class="nav-group-label">Sala de mando</div>
+        <button class="nav-btn active" data-view="inicio"><span class="dot"></span> Inicio</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">General</div>
+        <button class="nav-btn" data-view="pretemporada"><span class="dot"></span> Pretemporada</button>
+        <button class="nav-btn" data-view="plantilla"><span class="dot"></span> Plantilla</button>
+        <button class="nav-btn" data-view="datosjugadores"><span class="dot"></span> Datos jugadores</button>
+        <button class="nav-btn" data-view="calendario"><span class="dot"></span> Calendario</button>
+        <button class="nav-btn" data-view="ropa"><span class="dot"></span> Ropa</button>
+        <button class="nav-btn" data-view="economia"><span class="dot"></span> Economía</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Planificación</div>
+        <button class="nav-btn" data-view="planevolutivo"><span class="dot"></span> Plan evolutivo</button>
+        <button class="nav-btn" data-view="ideasiniciales"><span class="dot"></span> Ideas iniciales</button>
+        <button class="nav-btn" data-view="mesociclos"><span class="dot"></span> Planing mensual</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Entrenamientos</div>
+        <button class="nav-btn" data-view="sesiones"><span class="dot"></span> Sesiones</button>
+        <button class="nav-btn" data-view="tipostareas"><span class="dot"></span> Tipos de tareas</button>
+        <button class="nav-btn" data-view="basetareas"><span class="dot"></span> Base de datos de tareas</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Partidos</div>
+        <button class="nav-btn" data-view="competiciones"><span class="dot"></span> Competiciones</button>
+        <button class="nav-btn" data-view="clasificacion"><span class="dot"></span> Clasificación</button>
+        <button class="nav-btn" data-view="convocatorias"><span class="dot"></span> Convocatorias</button>
+        <button class="nav-btn" data-view="planpartido"><span class="dot"></span> Plan de partido</button>
+        <button class="nav-btn" data-view="minutos"><span class="dot"></span> Minutos</button>
+        <button class="nav-btn" data-view="puntuacion"><span class="dot"></span> Puntuación</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Valoraciones &amp; otros</div>
+        <button class="nav-btn" data-view="valoraciones"><span class="dot"></span> Ficha jugadores</button>
+        <button class="nav-btn" data-view="scouting"><span class="dot"></span> Scouting</button>
+        <button class="nav-btn" data-view="proteccion"><span class="dot"></span> Protección del menor</button>
+      </div>
+    </div>
+
+    <div class="sidebar-foot">
+      <div class="lbl">Copia de seguridad (opcional)</div>
+      <div class="sidebar-note">No es necesaria para guardar: todo se guarda solo. Úsala solo si quieres pasar los datos a otro dispositivo o tener un extra de seguridad.</div>
+      <button class="btn sm block" id="exportBackupBtn">⭳ Exportar copia (.json)</button>
+      <button class="btn sm block" id="importBackupBtn">⭱ Importar copia</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn-mobile" id="mobileMenuBtn" type="button" aria-label="Abrir menú" aria-controls="sidebar">☰</button>
+        <div>
+          <div class="eyebrow" id="viewEyebrow">Córdoba Futsal</div>
+          <h1 id="viewTitle">Inicio</h1>
+          <div class="sub" id="viewSub">Cuadro de mando del equipo</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn sm" id="refreshBtn" title="Traer los últimos cambios guardados por cualquier compañero">⟳ Actualizar</button>
+        <div class="save-pill"><span class="led"></span> <span id="saveStatus">Cargando…</span></div>
+      </div>
+    </div>
+
+    <!-- ================= INICIO ================= -->
+    <div class="view active" id="view-inicio">
+      <div class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="hero-eyebrow">Benjamín A · Temporada 26/27</div>
+            <h1>Buen entreno, mister.</h1>
+            <p>Este es el centro de operaciones del equipo: plantilla, planificación, entrenamientos, partidos y valoraciones, todo enlazado y actualizándose al instante. No hace falta guardar nada a mano: cada cambio se guarda solo.</p>
+          </div>
+          <div class="hero-badge"><img src="assets/img/logo.png" alt="Escudo del Córdoba Futsal" width="214" height="235"></div>
+        </div>
+        <div class="hero-rings" id="heroRings"></div>
+        <div id="shareNotice" class="mt-16"></div>
+      </div>
+
+      <div class="grid cols-4 mb-18">
+        <div class="stat-tile"><div class="n" id="stJugadores">0</div><div class="l">Jugadores en plantilla</div></div>
+        <div class="stat-tile"><div class="n" id="stPartidos">0</div><div class="l">Jornadas de liga</div></div>
+        <div class="stat-tile"><div class="n" id="stSesiones">0</div><div class="l">Sesiones de entreno</div></div>
+        <div class="stat-tile"><div class="n" id="stPosicion">—</div><div class="l">Posición en la tabla</div></div>
+      </div>
+
+      <div class="section-divider">Accesos rápidos</div>
+      <div class="grid cols-3">
+        <div class="menu-tile reveal" data-go="plantilla"><div class="icon">👥</div><div class="title">Plantilla</div><div class="desc">Descripción de los jugadores que formarán el equipo.</div></div>
+        <div class="menu-tile reveal" data-go="calendario"><div class="icon">📅</div><div class="title">Calendario</div><div class="desc">Calendario completo de la temporada 26-27.</div></div>
+        <div class="menu-tile reveal" data-go="economia"><div class="icon">💶</div><div class="title">Economía</div><div class="desc">Relación de pagos realizados por los jugadores.</div></div>
+        <div class="menu-tile reveal" data-go="planevolutivo"><div class="icon">📈</div><div class="title">Plan evolutivo</div><div class="desc">Qué se trabaja con los jugadores a lo largo de la temporada.</div></div>
+        <div class="menu-tile reveal" data-go="sesiones"><div class="icon">🏃</div><div class="title">Sesiones de entreno</div><div class="desc">Diseña y programa tus sesiones con tareas y tiempos.</div></div>
+        <div class="menu-tile reveal" data-go="basetareas"><div class="icon">🗂️</div><div class="title">Base de tareas</div><div class="desc">Tu propio catálogo de ejercicios reutilizable.</div></div>
+        <div class="menu-tile reveal" data-go="clasificacion"><div class="icon">🏆</div><div class="title">Clasificación</div><div class="desc">Tabla calculada al instante según los resultados que registres.</div></div>
+        <div class="menu-tile reveal" data-go="valoraciones"><div class="icon">📊</div><div class="title">Ficha jugadores</div><div class="desc">Evolución inicial · intermedia · final, con radar de rendimiento.</div></div>
+        <div class="menu-tile reveal" data-go="proteccion"><div class="icon">🛡️</div><div class="title">Protección del menor</div><div class="desc">Protocolo y canales de denuncia.</div></div>
+      </div>
+    </div>
+
+    <!-- ================= PRETEMPORADA ================= -->
+    <div class="view" id="view-pretemporada">
+      <div class="grid cols-2">
+        <div class="card hoverable"><h2>Datos iniciales</h2><div id="pretForm" class="stack-gap"></div></div>
+        <div class="card hoverable"><h2>Resumen</h2><p class="hint">Estos datos alimentan el resto de módulos automáticamente.</p><div id="pretResumen" class="mini-list"></div></div>
+      </div>
+    </div>
+
+    <!-- ================= PLANTILLA ================= -->
+    <div class="view" id="view-plantilla">
+      <div class="card">
+        <h2>Plantilla <small id="plantillaCount"></small></h2>
+        <p class="hint">Añade jugadores; el resto de módulos (ropa, economía, convocatorias, minutos, puntuación, valoraciones) se sincronizan automáticamente con esta lista.</p>
+        <div class="table-wrap"><table class="dt stack" id="tblPlantilla"></table></div>
+        <div class="mt-12"><button class="btn primary" id="addPlayerBtn">+ Añadir jugador</button></div>
+      </div>
+    </div>
+
+    <!-- ================= DATOS JUGADORES ================= -->
+    <div class="view" id="view-datosjugadores">
+      <div class="card"><h2>Datos de contacto</h2><p class="hint">Todo en mayúsculas · comprueba que el email sea correcto.</p><div class="table-wrap"><table class="dt stack" id="tblContactos"></table></div></div>
+    </div>
+
+    <!-- ================= CALENDARIO ================= -->
+    <div class="view" id="view-calendario">
+      <div class="card"><h2>Calendario temporada 26-27</h2><p class="hint">Septiembre 2026 – Agosto 2027 · festivos marcados en rojo · hoy resaltado en dorado.</p>
+      <div class="cal-grid" id="calGrid"></div></div>
+    </div>
+
+    <!-- ================= ROPA ================= -->
+    <div class="view" id="view-ropa">
+      <div class="card"><h2>Necesidades de ropa</h2><p class="hint">70 € en septiembre (pack verano) · 70 € en diciembre (pack invierno).</p><div class="table-wrap"><table class="dt stack" id="tblRopa"></table></div></div>
+    </div>
+
+    <!-- ================= ECONOMÍA ================= -->
+    <div class="view" id="view-economia">
+      <div class="card"><h2>Control de pagos <small>Click en la celda para alternar: vacío → X (pagado) → B (becado)</small></h2>
+      <div class="table-wrap"><table class="dt sticky-first" id="tblEconomia"></table></div>
+      <div id="econSummary" class="badge-total mt-12"></div></div>
+    </div>
+
+    <!-- ================= PLAN EVOLUTIVO ================= -->
+    <div class="view" id="view-planevolutivo">
+      <div class="card"><h2>Progresión evolutiva <small>1 iniciar · 2 aprender · 3 perfeccionar · 4 dominar</small></h2>
+      <p class="hint">Marca los meses en los que se ha trabajado cada contenido con el grupo Benjamín.</p>
+      <div class="table-wrap"><table class="dt plan-months sticky-first" id="tblPlanEvolutivo"></table></div></div>
+      <div class="grid cols-2 mt-16">
+        <div class="card hoverable"><h2>Reparto por bloque</h2><div class="donut-wrap" id="planDonut"></div></div>
+        <div class="card hoverable"><h2>Trabajado por bloque</h2><div class="bar-chart" id="planChart"></div></div>
+      </div>
+    </div>
+
+    <!-- ================= IDEAS INICIALES ================= -->
+    <div class="view" id="view-ideasiniciales"><div class="grid cols-2" id="ideasGrid"></div></div>
+
+    <!-- ================= MESOCICLOS ================= -->
+    <div class="view" id="view-mesociclos"><div class="tabs" id="mesoTabs"></div><div id="mesoContent"></div></div>
+
+    <!-- ================= SESIONES ================= -->
+    <div class="view" id="view-sesiones">
+      <div class="card">
+        <h2>Sesiones de entreno <small id="sesTotal"></small></h2>
+        <p class="hint">Cada sesión sigue la estructura del club: calentamiento → tecnificar → parte principal → vuelta a la calma. Los tiempos se suman automáticamente. Puedes traer tareas ya creadas desde tu Base de datos de tareas.</p>
+        <button class="btn primary" id="addSesionBtn">+ Nueva sesión</button>
+        <div id="sesionesList" class="cards-column mt-16"></div>
+      </div>
+    </div>
+
+    <!-- ================= TIPOS DE TAREAS ================= -->
+    <div class="view" id="view-tipostareas">
+      <div class="card"><h2>Tipos de tareas</h2><p class="hint">Referencia de tipologías de tarea según el manual del club, para usar al planificar sesiones.</p><div id="tiposTareasGrid" class="grid cols-3"></div></div>
+    </div>
+
+    <!-- ================= BASE DE DATOS DE TAREAS ================= -->
+    <div class="view" id="view-basetareas">
+      <div class="card">
+        <h2>Base de datos de tareas <small id="baseTareasCount"></small></h2>
+        <p class="hint">Tu catálogo propio de ejercicios: nómbralos, descríbelos, define tiempo, variables y tipología. Se guarda contigo para siempre.</p>
+        <button class="btn primary" id="addTareaDBBtn">+ Añadir tarea</button>
+        <div class="table-wrap mt-12"><table class="dt stack" id="tblBaseTareas"></table></div>
+      </div>
+    </div>
+
+    <!-- ================= COMPETICIONES ================= -->
+    <div class="view" id="view-competiciones">
+      <div class="card"><h2>Calendario de competición <small>22 jornadas · introduce los goles y la clasificación se recalcula sola</small></h2>
+      <div class="table-wrap"><table class="dt" id="tblJornadas"></table></div></div>
+    </div>
+
+    <!-- ================= CLASIFICACIÓN ================= -->
+    <div class="view" id="view-clasificacion">
+      <div class="card"><h2>Clasificación <small>calculada a partir de los resultados que registres en Competiciones</small></h2>
+      <div class="table-wrap"><table class="standings" id="tblStandings"></table></div></div>
+    </div>
+
+    <!-- ================= CONVOCATORIAS ================= -->
+    <div class="view" id="view-convocatorias">
+      <div class="card">
+        <h2>Convocatorias <small>marca los jugadores convocados en cada jornada</small></h2>
+        <button class="btn primary sm" id="addConvocatoriaBtn">+ Añadir jornada</button>
+        <div class="table-wrap mt-12"><table class="dt sticky-first" id="tblConvocatorias"></table></div>
+      </div>
+    </div>
+
+    <!-- ================= PLAN DE PARTIDO ================= -->
+    <div class="view" id="view-planpartido">
+      <div class="card">
+        <h2>Plan de partido</h2>
+        <p class="hint">Selecciona jornada y define titulares / cambios por parte.</p>
+        <div class="field-narrow"><label class="field">Jornada</label><select class="plain" id="ppSelect"></select></div>
+        <div id="ppContent"></div>
+      </div>
+    </div>
+
+    <!-- ================= MINUTOS ================= -->
+    <div class="view" id="view-minutos"><div class="card"><h2>Minutos jugados <small>por jornada convocada</small></h2><div class="table-wrap"><table class="dt sticky-first" id="tblMinutos"></table></div></div></div>
+
+    <!-- ================= PUNTUACIÓN ================= -->
+    <div class="view" id="view-puntuacion"><div class="card"><h2>Puntuación de desempeño <small>escala 0-10</small></h2><div class="table-wrap"><table class="dt sticky-first" id="tblPuntuacion"></table></div></div></div>
+
+    <!-- ================= VALORACIONES ================= -->
+    <div class="view" id="view-valoraciones"><div id="valoracionesList" class="cards-column tight"></div></div>
+
+    <!-- ================= SCOUTING ================= -->
+    <div class="view" id="view-scouting">
+      <div class="card">
+        <h2>Scouting</h2><p class="hint">Seguimiento de jugadores de otros equipos.</p>
+        <button class="btn primary sm" id="addScoutingBtn">+ Añadir jugador</button>
+        <div class="table-wrap mt-12"><table class="dt stack" id="tblScouting"></table></div>
+      </div>
+    </div>
+
+    <!-- ================= PROTECCIÓN DEL MENOR ================= -->
+    <div class="view" id="view-proteccion">
+      <div class="card card-danger">
+        <h2>🛡️ Protocolo de protección de las personas menores frente a la violencia en el deporte en Andalucía</h2>
+        <p class="legal-text">Vídeo explicativo: <a href="https://www.youtube.com/watch?v=g0SbxQAJeow" target="_blank" rel="noopener">youtube.com/watch?v=g0SbxQAJeow</a></p>
+      </div>
+      <div class="card mt-16">
+        <h2>Canales de denuncia</h2>
+        <div class="mini-list contact-list">
+          <div>• Presencial en la <b>sede del club</b></div>
+          <div>• Teléfono: <b>636 588 511</b></div>
+          <div>• Email: <b>direcciondeportiva@cordobafutsal.com</b></div>
+          <div>• Teléfono Junta de Andalucía: <b>900 851 818</b></div>
+          <div>• <a href="https://ws058.juntadeandalucia.es/SIMIA" target="_blank" rel="noopener">ws058.juntadeandalucia.es/SIMIA</a></div>
+          <div>• Teléfono: <b>116 111</b></div>
+          <div>• Delegado de prevención del menor en el club: <b>Javier Mohedano</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note" id="footerNote">Córdoba Futsal · Sala de Mando</div>
+  </main>
+</div>
+
+<!-- Orden de carga: configuración → datos → estado → guardado/Firebase → interfaz → vistas → arranque -->
+<script src="js/firebase-config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/backup.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/views/general.js"></script>
+<script src="js/views/planning.js"></script>
+<script src="js/views/training.js"></script>
+<script src="js/views/matches.js"></script>
+<script src="js/views/players.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

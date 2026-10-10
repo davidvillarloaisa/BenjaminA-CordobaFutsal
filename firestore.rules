@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // OPCIÓN A · sin login (la que usa la web por defecto):
+    // cualquiera que tenga el enlace de la web puede leer y editar los datos del equipo.
+    // Solo se permite el documento del equipo, nada más del proyecto.
+    match /equipos/{teamId} {
+      allow read, write: if true;
+    }
+
+    // OPCIÓN B · algo más cerrada (requiere FIREBASE_USE_ANONYMOUS_AUTH = true en js/firebase-config.js
+    // y activar "Anónimo" en Authentication > Método de acceso). Sustituye el bloque de arriba por este:
+    //
+    // match /equipos/{teamId} {
+    //   allow read, write: if request.auth != null;
+    // }
+  }
+}

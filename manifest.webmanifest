@@ -1,0 +1,15 @@
+{
+  "name": "Córdoba Futsal · Sala de Mando",
+  "short_name": "Sala de Mando",
+  "description": "Gestión del Benjamín A del Córdoba Futsal: plantilla, entrenos, partidos y valoraciones.",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0f0c",
+  "theme_color": "#0a0f0c",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
