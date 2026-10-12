@@ -13,7 +13,7 @@
    (Pasos detallados en LEEME.md)
 ========================================================= */
 // Configuración de Firebase para Córdoba Futsal
-const firebaseConfig = {
+window.FIREBASE_CONFIG = {
   apiKey: "AIzaSyB4AlnegsfGINn0v6BFJmRJmtxBqweqQ9E",
   authDomain: "benjaminacordobafutsal.firebaseapp.com",
   projectId: "benjaminacordobafutsal",
